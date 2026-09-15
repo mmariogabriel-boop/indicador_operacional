@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from processamento import (
+    COLUNA_EFETIVACAO,
     COLUNA_PRODUTO,
     COLUNAS_OBRIGATORIAS,
     consolidar_mensal,
@@ -648,12 +649,13 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### Regras")
-    sla_dias = st.number_input(
-        "Prazo máximo do SLA (dias úteis)",
+    sla_movimentacao_dias = st.number_input(
+        "Prazo de Movimentações (dias úteis)",
         min_value=0,
         max_value=60,
         value=4,
         step=1,
+        help="Este prazo afeta somente o indicador de Movimentações.",
     )
     meta_sla = st.slider(
         "Meta de cumprimento (%)",
@@ -663,8 +665,9 @@ with st.sidebar:
         step=1,
     )
     st.caption(
-        "As duas bases são processadas separadamente. "
-        "Movimentações: Dt.Modificação x Dt.Entrada SAP."
+        "Efetivação: Vigência Inicio × Data Efetivação, em dias úteis, "
+        "com SLA fixo de até 1 dia útil. "
+        "Movimentações: Dt.Modificação × Dt.Entrada SAP, usando somente o prazo acima."
     )
 
 
@@ -685,7 +688,7 @@ try:
         origem_efetivacao = None
 
     if dados_brutos is not None:
-        dados = processar_base(dados_brutos, int(sla_dias))
+        dados = processar_base(dados_brutos)
     else:
         dados = None
 except (KeyError, ValueError, OSError) as erro:
@@ -713,7 +716,7 @@ try:
     if movimentacoes_brutas is not None:
         dados_movimentacoes = processar_movimentacoes(
             movimentacoes_brutas,
-            int(sla_dias),
+            int(sla_movimentacao_dias),
         )
     else:
         dados_movimentacoes = None
@@ -806,8 +809,9 @@ with aba_odonto:
 with aba_movimentacoes:
     st.subheader("Indicador de Movimentações")
     st.caption(
-        "Regra: dias úteis entre Dt.Modificação e Dt.Entrada SAP. "
-        "Até o SLA = Dentro do prazo; acima do SLA = Fora do prazo. "
+        f"Regra exclusiva de Movimentações: dias úteis entre Dt.Modificação e Dt.Entrada SAP. "
+        f"Até {int(sla_movimentacao_dias)} dia(s) útil(eis) = Dentro do prazo; "
+        f"acima desse prazo = Fora do prazo. "
         "Os gráficos consideram somente 01/2026 em diante."
     )
     exibir_movimentacoes(dados_movimentacoes, float(meta_sla))
@@ -829,6 +833,7 @@ with aba_base:
                 COLUNA_PRODUTO,
                 "Vigência Inicio",
                 "Data do envio informativo",
+                COLUNA_EFETIVACAO,
                 "Dias para efetivação",
                 "Prazo",
             ]
@@ -841,6 +846,7 @@ with aba_base:
             column_config={
                 "Vigência Inicio": st.column_config.DateColumn(format="DD/MM/YYYY"),
                 "Data do envio informativo": st.column_config.DateColumn(format="DD/MM/YYYY"),
+                COLUNA_EFETIVACAO: st.column_config.DateColumn(format="DD/MM/YYYY"),
             },
         )
 
