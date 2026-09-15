@@ -10,8 +10,9 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+import processamento as processamento_mod
+
 from processamento import (
-    COLUNA_EFETIVACAO,
     COLUNA_PRODUTO,
     COLUNAS_OBRIGATORIAS,
     consolidar_mensal,
@@ -19,6 +20,12 @@ from processamento import (
     ranking_produtos_fora,
     resumo_operacional,
 )
+
+# Mantido localmente para o app não quebrar caso o servidor ainda esteja
+# com uma versão antiga de processamento.py. A compatibilidade completa
+# é validada logo abaixo e gera uma mensagem clara no painel.
+COLUNA_EFETIVACAO = "Data Efetivação"
+VERSAO_PROCESSAMENTO_ESPERADA = "2026-09-15-efetivacao-1diautil-v1"
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -40,6 +47,21 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+# =========================================================
+# VALIDAÇÃO DE VERSÃO DO PROCESSAMENTO
+# =========================================================
+# Evita o ImportError genérico do Streamlit Cloud quando app.py e
+# processamento.py são publicados em versões diferentes.
+versao_processamento = getattr(processamento_mod, "VERSAO_PROCESSAMENTO", None)
+if versao_processamento != VERSAO_PROCESSAMENTO_ESPERADA:
+    st.error(
+        "O arquivo `processamento.py` do servidor está desatualizado. "
+        "Substitua `app.py` e `processamento.py` juntos pela mesma versão. "
+        f"Versão esperada: {VERSAO_PROCESSAMENTO_ESPERADA}."
+    )
+    st.stop()
 
 
 st.markdown(

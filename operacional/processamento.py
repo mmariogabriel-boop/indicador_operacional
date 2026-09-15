@@ -8,6 +8,10 @@ import numpy as np
 import pandas as pd
 
 
+# Versão usada pelo app para garantir que os dois arquivos estejam sincronizados.
+VERSAO_PROCESSAMENTO = "2026-09-15-efetivacao-1diautil-v1"
+
+
 # =========================================================
 # COLUNAS DA BASE DE EFETIVAÇÃO
 # =========================================================
