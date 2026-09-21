@@ -550,11 +550,13 @@ def exibir_movimentacoes(dados_movimentacoes: pd.DataFrame, meta: float) -> None
         grafico_movimentacoes_quantidade(mensal),
         use_container_width=True,
         config={"displaylogo": False, "locale": "pt-BR"},
+        key="grafico_movimentacoes_quantidade",
     )
     st.plotly_chart(
         grafico_movimentacoes_percentual(mensal, meta),
         use_container_width=True,
         config={"displaylogo": False, "locale": "pt-BR"},
+        key="grafico_movimentacoes_percentual",
     )
 
     verificar = int(dados_movimentacoes["Indicador"].eq("Verificar").sum())
@@ -612,6 +614,7 @@ def exibir_secao(dados: pd.DataFrame, titulo: str, meta: float) -> None:
         grafico_percentual(mensal, meta, f"Cumprimento do SLA — {titulo}"),
         use_container_width=True,
         config={"displaylogo": False, "locale": "pt-BR"},
+        key=f"grafico_percentual_{titulo}",
     )
 
     coluna_grafico, coluna_ranking = st.columns([1.15, 0.85])
@@ -620,7 +623,7 @@ def exibir_secao(dados: pd.DataFrame, titulo: str, meta: float) -> None:
             grafico_quantidade(mensal),
             use_container_width=True,
             config={"displaylogo": False, "locale": "pt-BR"},
-            key=f"grafico_quantidade_{titulo}"
+            key=f"grafico_quantidade_{titulo}",
         )
     with coluna_ranking:
         ranking = grafico_ranking(dados)
@@ -631,6 +634,7 @@ def exibir_secao(dados: pd.DataFrame, titulo: str, meta: float) -> None:
                 ranking,
                 use_container_width=True,
                 config={"displaylogo": False, "locale": "pt-BR"},
+                key=f"grafico_ranking_{titulo}",
             )
 
     with st.expander("Ver consolidação mensal"):
