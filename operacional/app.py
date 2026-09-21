@@ -620,6 +620,7 @@ def exibir_secao(dados: pd.DataFrame, titulo: str, meta: float) -> None:
             grafico_quantidade(mensal),
             use_container_width=True,
             config={"displaylogo": False, "locale": "pt-BR"},
+            key=f"grafico_quantidade_{titulo}"
         )
     with coluna_ranking:
         ranking = grafico_ranking(dados)
