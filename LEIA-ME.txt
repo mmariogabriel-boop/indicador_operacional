@@ -1,0 +1,50 @@
+INDICADOR OPERACIONAL MEDIATORIE - RELATÓRIO GERENCIAL EM PDF
+
+Arquivos para subir juntos no Git / Streamlit Cloud:
+
+app.py
+processamento.py
+relatorio_pdf.py
+requirements.txt
+assets/
+    logo_mediatorie.png
+.streamlit/
+    config.toml
+
+O PDF utiliza o recorte atual do painel e inclui:
+- capa com bases, filtros, meta e SLAs;
+- Efetivação - Visão Geral;
+- Efetivação - Saúde;
+- Efetivação - Odonto;
+- KPIs Dentro/Fora do SLA;
+- gráficos percentuais e de volume;
+- ranking de produtos fora do SLA;
+- consolidação mensal;
+- Indicador de Movimentações;
+- regras utilizadas.
+
+Regras mantidas:
+- Efetivação: Vigência Inicio x Data Efetivação, SLA fixo de 1 dia útil;
+- Data Efetivação criada a partir de Data do envio informativo;
+- Movimentações: Dt.Modificação x Dt.Entrada SAP;
+- prazo de Movimentações configurável no painel;
+- Movimentações exibidas a partir de 01/2026;
+- filtro de segmento e competência aplicado à Efetivação.
+
+Como usar:
+1. Envie as duas planilhas.
+2. Ajuste prazo, meta, segmento e competência.
+3. Clique em Gerar relatório PDF.
+4. Clique em Baixar relatório em PDF.
+
+
+AJUSTE DE RÓTULOS - MOVIMENTAÇÕES
+
+Os gráficos de Movimentações no PDF agora exibem:
+- Quantidade Dentro do prazo em cada competência;
+- Quantidade Fora do prazo em cada competência;
+- Percentual Dentro do prazo;
+- Percentual Fora do prazo.
+
+Quando a faixa vermelha é pequena demais para receber texto internamente,
+o rótulo é posicionado acima da barra para permanecer legível.
